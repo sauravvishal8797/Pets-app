@@ -2,6 +2,7 @@ package android.example.com.pets;
 
 import static android.support.v7.widget.AppCompatDrawableManager.get;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -60,7 +61,22 @@ public class CatalogActivity extends AppCompatActivity {
             cursor.close();
         }
     }
-    
+
+    private void insertpet(){
+
+        PetDbHelper petDbHelper = new PetDbHelper(this);
+
+        SQLiteDatabase db = petDbHelper.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PetContract.PetEntry.PET_NAME_COL, "TOMMY");
+        contentValues.put(PetContract.PetEntry.PET_BREED_COL, "CHIHUAHUA");
+        contentValues.put(PetContract.PetEntry.PET_GENDER_COL, 1);
+        contentValues.put(PetContract.PetEntry.TABLE_NAME, 34);
+
+        Long id = db.insert(PetContract.PetEntry.TABLE_NAME, null, contentValues);
+    }
+
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_catalog_activity, menu);
@@ -73,8 +89,9 @@ public class CatalogActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
-
-                // Do nothing for now
+                insertpet();
+                DisplayDatabaseInfo();
+                
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
