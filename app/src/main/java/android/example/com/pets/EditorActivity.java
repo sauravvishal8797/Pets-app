@@ -68,10 +68,10 @@ public class EditorActivity extends AppCompatActivity{
         spinneradapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mGenderSpinner.setAdapter(spinneradapter);
-
-        mGenderSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selection = (String) adapterView.getItemAtPosition(i);
+        mGenderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selection = (String) parent.getItemAtPosition(position);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.gender_male))) {
                         mGender = 1;
@@ -82,6 +82,7 @@ public class EditorActivity extends AppCompatActivity{
                     }
                 }
             }
+
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -90,11 +91,15 @@ public class EditorActivity extends AppCompatActivity{
         });
     }
 
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_editor.xml file.
         // This adds menu items to the app bar.
-        getMenuInflater().inflate(R.menu., menu);
+        getMenuInflater().inflate(R.menu.editor_menu, menu);
         return true;
     }
 

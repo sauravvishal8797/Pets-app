@@ -25,7 +25,7 @@ public class CatalogActivity extends AppCompatActivity {
 
         // Setup FAB to open EditorActivity
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        mFloatingActionButton.OnClickListener(new View.OnClickListener() {
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 startActivity(new Intent(CatalogActivity.this, EditorActivity.class));
             }
