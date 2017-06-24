@@ -62,6 +62,11 @@ public class CatalogActivity extends AppCompatActivity {
         }
     }
 
+    @Override protected void onStart() {
+        super.onStart();
+        DisplayDatabaseInfo();
+    }
+
     private void insertpet(){
 
         PetDbHelper petDbHelper = new PetDbHelper(this);
@@ -91,7 +96,7 @@ public class CatalogActivity extends AppCompatActivity {
             case R.id.action_insert_dummy_data:
                 insertpet();
                 DisplayDatabaseInfo();
-                
+
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:

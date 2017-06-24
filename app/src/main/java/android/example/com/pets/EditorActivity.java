@@ -1,10 +1,17 @@
 package android.example.com.pets;
 
+import static android.example.com.pets.data.PetDbHelper.LOG_TAG;
+
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.example.com.pets.data.PetContract;
+import android.example.com.pets.data.PetDbHelper;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * Created by saurav on 24/6/17.
@@ -91,8 +99,28 @@ public class EditorActivity extends AppCompatActivity{
         });
     }
 
+    //To insert a single pet from the editor activity into the database
+    private void savepet(){
 
+        String name = mNameEditText.getText().toString().trim();
+        String breed = mBreedEditText.getText().toString().trim();
+        String weight = mWeightEditText.getText().toString().trim();
+        int Weight = Integer.parseInt(weight);
+        PetDbHelper petDbHelper = new PetDbHelper(this);
+        SQLiteDatabase db = petDbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PetContract.PetEntry.PET_NAME_COL, name);
+        contentValues.put(PetContract.PetEntry.PET_BREED_COL, breed);
+        contentValues.put(PetContract.PetEntry.PET_WEIGHT_COLOUMN, weight);
+        Long id = db.insert(PetContract.PetEntry.TABLE_NAME, null, contentValues);
+        if(id == -1) {
+            Toast.makeText(this, "Error in saving data", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "Succesfully saved data", Toast.LENGTH_SHORT).show();
+        }
 
+    }
 
 
     @Override
@@ -109,6 +137,9 @@ public class EditorActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
+                //To save the pet in the database and then exit the activity
+                savepet();
+                finish();
 
                 return true;
             // Respond to a click on the "Delete" menu option
