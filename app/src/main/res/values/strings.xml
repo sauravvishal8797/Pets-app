@@ -22,5 +22,21 @@
   <!-- String resource for unit of pet weight -->
   <string name="unit_pet_weight">kg</string>
 
+  <!-- Label for dropdown menu option if the pet's gender is unknown [CHAR LIMIT=20] -->
+  <string name="gender_unknown">Unknown</string>
+
+  <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
+  <string name="gender_male">Male</string>
+
+  <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
+  <string name="gender_female">Female</string>
+
+  <!-- Label for overflow menu option that inserts fake pet data into the app [CHAR LIMIT=20] -->
+  <string name="action_insert_dummy_data">Insert Dummy Data</string>
+
+  <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
+  <string name="action_delete_all_entries">Delete All Pets</string>
+
+
 
 </resources>
