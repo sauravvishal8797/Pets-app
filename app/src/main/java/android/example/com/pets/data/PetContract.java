@@ -42,6 +42,11 @@ public final class PetContract {
         public static final String PET_GENDER_COL = "Gender";
 
         /**
+         * Constant for the petsweight coloumn
+         */
+        public static final String PET_WEIGHT_COLOUMN = "Weight";
+
+        /**
          * Constant for the petsid coloumn
          */
         public static final String PET_ID_COL = BaseColumns._ID;
