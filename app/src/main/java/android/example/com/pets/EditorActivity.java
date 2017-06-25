@@ -1,11 +1,13 @@
 package android.example.com.pets;
 
+import static android.R.attr.id;
 import static android.example.com.pets.data.PetDbHelper.LOG_TAG;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.example.com.pets.data.PetContract;
 import android.example.com.pets.data.PetDbHelper;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
@@ -114,12 +116,15 @@ public class EditorActivity extends AppCompatActivity{
         contentValues.put(PetContract.PetEntry.PET_BREED_COL, breed);
         contentValues.put(PetContract.PetEntry.PET_WEIGHT_COLOUMN, weight);
         contentValues.put(PetContract.PetEntry.PET_GENDER_COL, mGender);
-        Long id = db.insert(PetContract.PetEntry.TABLE_NAME, null, contentValues);
-        if(id == -1) {
-            Toast.makeText(this, "Error in saving data", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Toast.makeText(this, "Succesfully saved data", Toast.LENGTH_SHORT).show();
+        Uri newUri = getContentResolver().insert(PetContract.PetEntry.CONTENT_URI, contentValues);
+        if (newUri == null) {
+            // If the new content URI is null, then there was an error with insertion.
+            Toast.makeText(this, getString(R.string.Error_inserting),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the insertion was successful and we can display a toast.
+            Toast.makeText(this, getString(R.string.Inserted),
+                    Toast.LENGTH_SHORT).show();
         }
 
     }

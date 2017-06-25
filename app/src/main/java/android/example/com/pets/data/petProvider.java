@@ -1,5 +1,7 @@
 package android.example.com.pets.data;
 
+import static android.R.attr.id;
+
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -10,6 +12,7 @@ import android.example.com.pets.R;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -17,6 +20,8 @@ import android.widget.Toast;
  */
 
 public class petProvider extends ContentProvider {
+
+    public static final String LOG_TAG = petProvider.class.getSimpleName();
 
     private PetDbHelper mPetDbHelper;
 
@@ -79,9 +84,24 @@ public class petProvider extends ContentProvider {
     private Uri petinsert(Uri uri, ContentValues contentValues){
 
         SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
+        String name = contentValues.getAsString(PetContract.PetEntry.PET_NAME_COL);
+        if(name == null){
+            throw new IllegalArgumentException("Pet reqquires a name");
+        }
+        String breed = contentValues.getAsString(PetContract.PetEntry.PET_BREED_COL);
+        if(breed == null){
+            throw new IllegalArgumentException("Pet requires a breed");
+        }
+        String weight = contentValues.getAsString(PetContract.PetEntry.PET_WEIGHT_COLOUMN);
+        if(weight == null){
+            throw new IllegalArgumentException("Pet requires some weight");
+        }
+
+
         Long id = db.insert(PetContract.PetEntry.TABLE_NAME, null,contentValues);
         if(id == -1){
-            Toast.makeText(getContext(), R.string.Error_inserting, Toast.LENGTH_SHORT).show();
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
         }
         else {
             Toast.makeText(getContext(), R.string.Inserted, Toast.LENGTH_SHORT).show();

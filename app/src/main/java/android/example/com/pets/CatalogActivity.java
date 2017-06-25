@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.example.com.pets.data.PetContract;
 import android.example.com.pets.data.PetDbHelper;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -89,7 +90,8 @@ public class CatalogActivity extends AppCompatActivity {
         contentValues.put(PetContract.PetEntry.PET_GENDER_COL, 1);
         contentValues.put(PetContract.PetEntry.TABLE_NAME, 34);
 
-        Long id = db.insert(PetContract.PetEntry.TABLE_NAME, null, contentValues);
+        Uri uri = getContentResolver().insert(PetContract.PetEntry.CONTENT_URI, contentValues);
+
     }
 
 
