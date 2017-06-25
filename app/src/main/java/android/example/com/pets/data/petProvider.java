@@ -1,6 +1,7 @@
 package android.example.com.pets.data;
 
 import static android.R.attr.id;
+import static android.R.attr.thicknessRatio;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -96,16 +97,17 @@ public class petProvider extends ContentProvider {
         if(weight == null){
             throw new IllegalArgumentException("Pet requires some weight");
         }
+        Integer gender = contentValues.getAsInteger(PetContract.PetEntry.PET_GENDER_COL);
+        if (gender != 0 && gender != 1 && gender != 2) {
+            throw new IllegalArgumentException("Gender out of scope");
+
+        }
 
 
         Long id = db.insert(PetContract.PetEntry.TABLE_NAME, null,contentValues);
         if(id == -1){
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
             return null;
-        }
-        else {
-            Toast.makeText(getContext(), R.string.Inserted, Toast.LENGTH_SHORT).show();
-
         }
         Uri inserturi = ContentUris.withAppendedId(uri, id);
         return inserturi;
@@ -117,6 +119,58 @@ public class petProvider extends ContentProvider {
 
     @Override public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s,
                                 @Nullable String[] strings) {
+
+        SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
+
+        int match = uriMatcher.match(uri);
+        switch (match){
+            case PETS:
+                return updatepet(contentValues, s, strings);
+
+            case PETS_ID:
+                s = PetContract.PetEntry.PET_ID_COL + "=?";
+                strings = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                int i = db.update(PetContract.PetEntry.TABLE_NAME, contentValues, s, strings);
+                return i;
+        }
         return 0;
+    }
+
+    private int updatepet(ContentValues contentValues, String selection, String[] selectionargs){
+
+        SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
+        if(contentValues.containsKey(PetContract.PetEntry.PET_NAME_COL)){
+            String name = contentValues.getAsString(PetContract.PetEntry.PET_NAME_COL);
+            if(name == null){
+                throw new IllegalArgumentException("Pet requires a name to be updated");
+            }
+        }
+        if(contentValues.containsKey(PetContract.PetEntry.PET_BREED_COL)){
+            String breed = contentValues.getAsString(PetContract.PetEntry.PET_BREED_COL);
+            if(breed == null){
+                throw new IllegalArgumentException("Pet requires a breed to be updated");
+            }
+        }
+        if(contentValues.containsKey(PetContract.PetEntry.PET_WEIGHT_COLOUMN)){
+            String weight = contentValues.getAsString(PetContract.PetEntry.PET_WEIGHT_COLOUMN);
+            if (weight == null) {
+                throw new IllegalArgumentException("Pet requires a weight to be updated");
+            }
+        }
+        if(contentValues.containsKey(PetContract.PetEntry.PET_GENDER_COL)) {
+            Integer gender = contentValues.getAsInteger(PetContract.PetEntry
+                    .PET_GENDER_COL);
+            if (gender != 0 && gender != 1 && gender != 2) {
+                throw new IllegalArgumentException("Gender out of scope");
+
+            }
+        }
+        int i = db.update(PetContract.PetEntry.TABLE_NAME, contentValues, selection, selectionargs);
+        return i;
+
+
+        }
+
+
     }
 }
