@@ -43,6 +43,14 @@
   <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
   <string name="action_delete">Delete</string>
 
+  <!--Toast message for error while inserting pet -->
+  <string name="Error_inserting">Error while inserting the pet</string>
+
+  <!--Toast message for succesfully inserted pet -->
+  <string name="Inserted">Succesfully added pet</string>
+
+
+
 
 
 </resources>

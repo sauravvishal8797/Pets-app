@@ -6,9 +6,11 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.example.com.pets.R;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 /**
  * Created by saurav on 25/6/17.
@@ -43,7 +45,7 @@ public class petProvider extends ContentProvider {
         int match = uriMatcher.match(uri);
         switch (match){
             case PETS:
-
+                cursor = db.query(PetContract.PetEntry.TABLE_NAME, strings, s, strings1, null, null, s1);
                 break;
 
             case PETS_ID:
@@ -62,7 +64,31 @@ public class petProvider extends ContentProvider {
     }
 
     @Nullable @Override public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        return null;
+
+
+        final int match = uriMatcher.match(uri);
+        switch (match){
+            case PETS:
+                return petinsert(uri, contentValues);
+            default:
+                throw new IllegalArgumentException("Unknown uri" + uri);
+        }
+
+    }
+
+    private Uri petinsert(Uri uri, ContentValues contentValues){
+
+        SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
+        Long id = db.insert(PetContract.PetEntry.TABLE_NAME, null,contentValues);
+        if(id == -1){
+            Toast.makeText(getContext(), R.string.Error_inserting, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getContext(), R.string.Inserted, Toast.LENGTH_SHORT).show();
+
+        }
+        Uri inserturi = ContentUris.withAppendedId(uri, id);
+        return inserturi;
     }
 
     @Override public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
