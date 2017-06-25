@@ -2,6 +2,8 @@ package android.example.com.pets.data;
 
 import static android.R.attr.id;
 import static android.R.attr.thicknessRatio;
+import static android.example.com.pets.data.PetContract.PetEntry.CONTENT_LIST_TYPE;
+import static android.icu.lang.UCharacter.JoiningGroup.PE;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -48,7 +50,7 @@ public class petProvider extends ContentProvider {
 
         SQLiteDatabase db = mPetDbHelper.getReadableDatabase();
         Cursor cursor = null;
-        int match = uriMatcher.match(uri);
+        final int match = uriMatcher.match(uri);
         switch (match){
             case PETS:
                 cursor = db.query(PetContract.PetEntry.TABLE_NAME, strings, s, strings1, null, null, s1);
@@ -66,7 +68,16 @@ public class petProvider extends ContentProvider {
     }
 
     @Nullable @Override public String getType(@NonNull Uri uri) {
-        return null;
+
+        final int match = uriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                return PetContract.PetEntry.CONTENT_LIST_TYPE;
+            case PETS_ID:
+                return PetContract.PetEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+        }
     }
 
     @Nullable @Override public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
@@ -114,27 +125,49 @@ public class petProvider extends ContentProvider {
     }
 
     @Override public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
-    }
 
-    @Override public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s,
-                                @Nullable String[] strings) {
-
-        SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
-
-        int match = uriMatcher.match(uri);
-        switch (match){
+        final int matcher = uriMatcher.match(uri);
+        switch (matcher) {
             case PETS:
-                return updatepet(contentValues, s, strings);
+                return deletepet(s, strings);
 
             case PETS_ID:
+                SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
                 s = PetContract.PetEntry.PET_ID_COL + "=?";
                 strings = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                int i = db.update(PetContract.PetEntry.TABLE_NAME, contentValues, s, strings);
+                int i = db.delete(PetContract.PetEntry.TABLE_NAME, s, strings);
                 return i;
         }
-        return 0;
     }
+    private int deletepet(String selection, String[] selectionargs) {
+
+        SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
+        int i = db.delete(PetContract.PetEntry.TABLE_NAME, selection, selectionargs);
+        if(selection == null) {
+            throw new IllegalArgumentException("Invalid clause");
+        }
+        return i;
+    }
+
+        @Override public int update (@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s,
+                @Nullable String[]strings){
+
+
+            final int match = uriMatcher.match(uri);
+            switch (match) {
+                case PETS:
+                    return updatepet(contentValues, s, strings);
+
+                case PETS_ID:
+                    SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
+                    s = PetContract.PetEntry.PET_ID_COL + "=?";
+                    strings = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                    int i = db.update(PetContract.PetEntry.TABLE_NAME, contentValues, s, strings);
+                    return i;
+            }
+            return 0;
+        }
+
 
     private int updatepet(ContentValues contentValues, String selection, String[] selectionargs){
 
