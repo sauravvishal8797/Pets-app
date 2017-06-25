@@ -36,10 +36,9 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
-        DisplayDatabaseInfo();
     }
 
-    private void DisplayDatabaseInfo(){
+    private void DisplayDatabaseInfo() {
 
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
@@ -48,23 +47,42 @@ public class CatalogActivity extends AppCompatActivity {
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        // Perform this raw SQL query "SELECT * FROM pets"
-        // to get a Cursor that contains all rows from the pets table.
-        Cursor cursor = db.rawQuery("SELECT * FROM " + PetContract.PetEntry.TABLE_NAME, null);
+        String projections[] = {PetContract.PetEntry.PET_NAME_COL, PetContract.PetEntry.PET_WEIGHT_COLOUMN,
+                PetContract.PetEntry.PET_GENDER_COL, PetContract.PetEntry.PET_BREED_COL};
+        Cursor cursor = db.query(PetContract.PetEntry.TABLE_NAME, projections, null, null, null, null,
+                null);
+
+        int Namecoloumnindexx = cursor.getColumnIndex(PetContract.PetEntry.PET_NAME_COL);
+        int WeightcoloumnIndeex = cursor.getColumnIndex(PetContract.PetEntry.PET_WEIGHT_COLOUMN);
+        int IdcoloumnIndex = cursor.getColumnIndex(PetContract.PetEntry.PET_ID_COL);
+        int gendercoloumniindex = cursor.getColumnIndex(PetContract.PetEntry.PET_GENDER_COL);
+        int breedcoloumnindex = cursor.getColumnIndex(PetContract.PetEntry.PET_BREED_COL);
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the
             // pets table in the database).
             mTextview.setText("Number of rows in pets database table: " + cursor.getCount());
+            while (cursor.moveToNext()){
+                String name = cursor.getString(Namecoloumnindexx);
+                String brred = cursor.getString(breedcoloumnindex);
+                String weight = cursor.getString(WeightcoloumnIndeex);
+                int gender = cursor.getInt(gendercoloumniindex);
+                String gen = String.valueOf(gender);
+
+                mTextview.append("\n" + name + "-" + brred + "-" + weight + "-" + gen);
+
+            }
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its
             // resources and makes it invalid.
             cursor.close();
         }
+
     }
 
     @Override protected void onStart() {
         super.onStart();
         DisplayDatabaseInfo();
+
     }
 
     private void insertpet(){
@@ -95,7 +113,7 @@ public class CatalogActivity extends AppCompatActivity {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
                 insertpet();
-                DisplayDatabaseInfo();
+
 
                 return true;
             // Respond to a click on the "Delete all entries" menu option

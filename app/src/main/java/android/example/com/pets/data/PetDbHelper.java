@@ -34,12 +34,12 @@ public class PetDbHelper extends SQLiteOpenHelper {
      */
     @Override public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        String SQL_CREATE_ENTRIES = "CREATE" + PetContract.PetEntry.TABLE_NAME + "("
+        String SQL_CREATE_ENTRIES = "CREATE TABLE " + PetContract.PetEntry.TABLE_NAME + "("
                 +PetContract.PetEntry.PET_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 +PetContract.PetEntry.PET_NAME_COL + " TEXT NOT NULL, "
                 +PetContract.PetEntry.PET_BREED_COL + " TEXT NOT NULL, "
                 +PetContract.PetEntry.PET_WEIGHT_COLOUMN + " INTEGER NOT NULL, "
-                +PetContract.PetEntry.PET_GENDER_COL + " INTEGER NOT NULL);";
+                +PetContract.PetEntry.PET_GENDER_COL + " INTEGER);";
         sqLiteDatabase.execSQL(SQL_CREATE_ENTRIES);
 
 

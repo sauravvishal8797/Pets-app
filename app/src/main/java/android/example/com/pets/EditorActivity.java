@@ -82,11 +82,11 @@ public class EditorActivity extends AppCompatActivity{
                 String selection = (String) parent.getItemAtPosition(position);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.gender_male))) {
-                        mGender = 1;
+                        mGender = PetContract.PetEntry.MALE;
                     } else if (selection.equals(getString(R.string.gender_female))) {
-                        mGender = 2;
+                        mGender = PetContract.PetEntry.FEMALE;
                     } else {
-                        mGender = 0;
+                        mGender = PetContract.PetEntry.UNKNOWN;
                     }
                 }
             }
@@ -106,12 +106,14 @@ public class EditorActivity extends AppCompatActivity{
         String breed = mBreedEditText.getText().toString().trim();
         String weight = mWeightEditText.getText().toString().trim();
         int Weight = Integer.parseInt(weight);
+
         PetDbHelper petDbHelper = new PetDbHelper(this);
         SQLiteDatabase db = petDbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(PetContract.PetEntry.PET_NAME_COL, name);
         contentValues.put(PetContract.PetEntry.PET_BREED_COL, breed);
         contentValues.put(PetContract.PetEntry.PET_WEIGHT_COLOUMN, weight);
+        contentValues.put(PetContract.PetEntry.PET_GENDER_COL, mGender);
         Long id = db.insert(PetContract.PetEntry.TABLE_NAME, null, contentValues);
         if(id == -1) {
             Toast.makeText(this, "Error in saving data", Toast.LENGTH_SHORT).show();
