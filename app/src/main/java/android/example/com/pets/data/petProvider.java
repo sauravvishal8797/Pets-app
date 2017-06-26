@@ -109,7 +109,7 @@ public class petProvider extends ContentProvider {
             throw new IllegalArgumentException("Pet requires some weight");
         }
         Integer gender = contentValues.getAsInteger(PetContract.PetEntry.PET_GENDER_COL);
-        if (gender != 0 && gender != 1 && gender != 2) {
+        if (gender == null || !PetContract.PetEntry.validgender(gender)) {
             throw new IllegalArgumentException("Gender out of scope");
 
         }
@@ -143,9 +143,6 @@ public class petProvider extends ContentProvider {
 
         SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
         int i = db.delete(PetContract.PetEntry.TABLE_NAME, selection, selectionargs);
-        if(selection == null) {
-            throw new IllegalArgumentException("Invalid clause");
-        }
         return i;
     }
 

@@ -88,6 +88,15 @@ public final class PetContract {
          */
         public static final int UNKNOWN = 0;
 
+        public static boolean validgender(int gender){
+            if(gender == 0 || gender == 1 || gender == 2){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
 
     }
 
