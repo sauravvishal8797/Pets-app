@@ -64,6 +64,7 @@ public class petProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri" + uri);
         }
+        cursor.setNotificationUri(getContext().getContentResolver(), PetContract.PetEntry.CONTENT_URI);
         return cursor;
     }
 
@@ -121,6 +122,7 @@ public class petProvider extends ContentProvider {
             return null;
         }
         Uri inserturi = ContentUris.withAppendedId(uri, id);
+        getContext().getContentResolver().notifyChange(PetContract.PetEntry.CONTENT_URI, null);
         return inserturi;
     }
 
@@ -136,6 +138,7 @@ public class petProvider extends ContentProvider {
                 s = PetContract.PetEntry.PET_ID_COL + "=?";
                 strings = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 int i = db.delete(PetContract.PetEntry.TABLE_NAME, s, strings);
+                getContext().getContentResolver().notifyChange(PetContract.PetEntry.CONTENT_URI, null);
                 return i;
         }
     }
@@ -143,6 +146,7 @@ public class petProvider extends ContentProvider {
 
         SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
         int i = db.delete(PetContract.PetEntry.TABLE_NAME, selection, selectionargs);
+        getContext().getContentResolver().notifyChange(PetContract.PetEntry.CONTENT_URI, null);
         return i;
     }
 
@@ -160,6 +164,7 @@ public class petProvider extends ContentProvider {
                     s = PetContract.PetEntry.PET_ID_COL + "=?";
                     strings = new String[]{String.valueOf(ContentUris.parseId(uri))};
                     int i = db.update(PetContract.PetEntry.TABLE_NAME, contentValues, s, strings);
+                    getContext().getContentResolver().notifyChange(PetContract.PetEntry.CONTENT_URI, null);
                     return i;
             }
             return 0;
@@ -196,6 +201,7 @@ public class petProvider extends ContentProvider {
             }
         }
         int i = db.update(PetContract.PetEntry.TABLE_NAME, contentValues, selection, selectionargs);
+        getContext().getContentResolver().notifyChange(PetContract.PetEntry.CONTENT_URI, null);
         return i;
 
 

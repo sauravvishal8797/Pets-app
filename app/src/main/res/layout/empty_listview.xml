@@ -35,3 +35,4 @@
       android:textAppearance="?android:textAppearanceSmall"
       android:textColor="#A2AAB0"/>
 
+</RelativeLayout>
