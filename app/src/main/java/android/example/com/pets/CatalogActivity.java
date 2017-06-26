@@ -2,6 +2,7 @@ package android.example.com.pets;
 
 import static android.support.v7.widget.AppCompatDrawableManager.get;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,6 +50,15 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         });
 
         ListView listView = (ListView) findViewById(R.id.list_id);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                Uri contenturi = ContentUris.withAppendedId(PetContract.PetEntry.CONTENT_URI, l);
+                intent.setData(contenturi);
+                startActivity(intent);
+            }
+        });
         View emptyiew = (View) findViewById(R.id.empty_view);
         listView.setEmptyView(emptyiew);
         mCursorAdapter = new PetCursorAdapter(this, null);

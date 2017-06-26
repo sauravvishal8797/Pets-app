@@ -4,6 +4,7 @@ import static android.R.attr.id;
 import static android.example.com.pets.data.PetDbHelper.LOG_TAG;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.example.com.pets.data.PetContract;
 import android.example.com.pets.data.PetDbHelper;
@@ -53,6 +54,17 @@ public class EditorActivity extends AppCompatActivity{
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editor_activity);
+
+        Intent intent = getIntent();
+        Uri uri = intent.getData();
+        if(uri == null){
+
+            setTitle(R.string.Add_pet);
+        }
+        else{
+
+            setTitle(R.string.Edit_pet);
+        }
 
         mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
 

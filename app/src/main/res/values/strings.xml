@@ -55,6 +55,10 @@
   <!-- message for empty listview -->
   <string name="empty_view_subtitle_text">Lets get started by adding a pet here.</string>
 
+  <string name="Add_pet">Add pet</string>
+
+  <string name="Edit_pet">Edit pet</string>
+
 
 
 
