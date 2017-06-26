@@ -3,6 +3,7 @@ package android.example.com.pets;
 import static android.support.v7.widget.AppCompatDrawableManager.get;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,17 +11,26 @@ import android.example.com.pets.data.PetContract;
 import android.example.com.pets.data.PetDbHelper;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class CatalogActivity extends AppCompatActivity {
+public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private TextView mTextview;
     private FloatingActionButton mFloatingActionButton;
+    private CursorAdapter mCursorAdapter;
+
+    private static final int LOADER_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,11 @@ public class CatalogActivity extends AppCompatActivity {
                 startActivity(new Intent(CatalogActivity.this, EditorActivity.class));
             }
         });
+
+        ListView listView = (ListView) findViewById(R.id.list_id);
+        mCursorAdapter = new PetCursorAdapter(this, null);
+        listView.setAdapter(mCursorAdapter);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
     }
 
@@ -117,5 +132,22 @@ public class CatalogActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        return new CursorLoader(getApplicationContext(), PetContract.PetEntry.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        mCursorAdapter.swapCursor(data);
+
+    }
+
+    @Override public void onLoaderReset(Loader<Cursor> loader) {
+
+        mCursorAdapter.swapCursor(null);
+
     }
 }
