@@ -5,13 +5,17 @@ import static android.example.com.pets.data.PetDbHelper.LOG_TAG;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.example.com.pets.data.PetContract;
 import android.example.com.pets.data.PetDbHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,9 +32,13 @@ import android.widget.Toast;
  * Created by saurav on 24/6/17.
  */
 
-public class EditorActivity extends AppCompatActivity{
+public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private EditText mNameEditText;
+
+    private Uri uri;
+
+    private static final int LOADER_ID = 1;
 
     /**
      * EditText field to enter the pet's breed
@@ -56,7 +64,7 @@ public class EditorActivity extends AppCompatActivity{
         setContentView(R.layout.editor_activity);
 
         Intent intent = getIntent();
-        Uri uri = intent.getData();
+        uri = intent.getData();
         if(uri == null){
 
             setTitle(R.string.Add_pet);
@@ -75,6 +83,8 @@ public class EditorActivity extends AppCompatActivity{
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
 
         setupspinner();
+
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
 
     }
@@ -178,4 +188,37 @@ public class EditorActivity extends AppCompatActivity{
     }
 
 
+    @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        return new CursorLoader(this, uri, null, null, null, null);
+    }
+
+    @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        int nameindex = data.getColumnIndex(PetContract.PetEntry.PET_NAME_COL);
+        int breedindex = data.getColumnIndex(PetContract.PetEntry.PET_BREED_COL);
+        int weightindex = data.getColumnIndex(PetContract.PetEntry.PET_WEIGHT_COLOUMN);
+        int genderindex = data.getColumnIndex(PetContract.PetEntry.PET_GENDER_COL);
+
+        String name = data.getString(nameindex);
+        String breed = data.getString(breedindex);
+        String weight = data.getString(weightindex);
+        String gender = data.getString(genderindex);
+        int gen = Integer.parseInt(gender);
+
+        mNameEditText.setText(name);
+        mWeightEditText.setText(weight);
+        mGender = gen;
+        mBreedEditText.setText(breed);
+
+    }
+
+    @Override public void onLoaderReset(Loader<Cursor> loader) {
+
+        mNameEditText.setText(null);
+        mBreedEditText.setText(null);
+        mGender = 0;
+        mWeightEditText.setText(null);
+
+    }
 }
