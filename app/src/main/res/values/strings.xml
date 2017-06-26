@@ -49,6 +49,15 @@
   <!--Toast message for succesfully inserted pet -->
   <string name="Inserted">Succesfully added pet</string>
 
+  <!-- message for empty listview -->
+  <string name="empty_view_title_text">Its a bit lonely out here...</string>
+
+  <!-- message for empty listview -->
+  <string name="empty_view_subtitle_text">Lets get started by adding a pet here.</string>
+
+
+
+
 
 
 
