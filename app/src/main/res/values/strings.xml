@@ -69,6 +69,12 @@
 
   <string name="negative_dialog_button">Keep Editing</string>
 
+  <string name="delete_pet">Do you want to delete this pet?</string>
+
+  <string name="delete_confirmation">Delete</string>
+
+  <string name="delete_cancellation">Cancel</string>
+
 
 
 

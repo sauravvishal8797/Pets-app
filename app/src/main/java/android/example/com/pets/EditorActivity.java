@@ -247,6 +247,32 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             dialog.show();
         }
 
+        private void deleteconfirmationdialog() {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(R.string.delete_pet);
+            builder.setPositiveButton(R.string.delete_confirmation, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface dialogInterface, int i) {
+
+                    if (dialogInterface != null) {
+                        deletepet();
+                    }
+                }
+            });
+            builder.setNegativeButton(R.string.delete_cancellation, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface dialogInterface, int i) {
+
+                    if(dialogInterface != null){
+                        finish();
+
+                    }
+                }
+            });
+        }
+
+
+
 
     @Override public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -282,7 +308,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
 
-                // Do nothing for now
+                deleteconfirmationdialog();
+
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
