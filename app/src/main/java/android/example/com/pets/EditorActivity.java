@@ -1,6 +1,7 @@
 package android.example.com.pets;
 
 
+import static android.R.attr.id;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.support.v7.widget.AppCompatDrawableManager.get;
 import android.app.LoaderManager;
@@ -91,11 +92,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         uri = intent.getData();
         if(uri == null){
 
-            setTitle(R.string.Add_pet);
+            setTitle(string.Add_pet);
+            invalidateOptionsMenu();
         }
         else{
 
-            setTitle(R.string.Edit_pet);
+            setTitle(string.Edit_pet);
         }
 
         mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
@@ -149,9 +151,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
                 if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.gender_male))) {
+                    if (selection.equals(getString(string.gender_male))) {
                         mGender = PetContract.PetEntry.MALE;
-                    } else if (selection.equals(getString(R.string.gender_female))) {
+                    } else if (selection.equals(getString(string.gender_female))) {
                         mGender = PetContract.PetEntry.FEMALE;
                     } else {
                         mGender = PetContract.PetEntry.UNKNOWN;
@@ -246,8 +248,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
 
+    @Override public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
+        if(uri == null){
+            MenuItem item = menu.findItem(R.id.action_delete);
+            item.setVisible(false);
+        }
 
+        return true;
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
