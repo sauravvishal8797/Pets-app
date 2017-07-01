@@ -59,6 +59,10 @@
 
   <string name="Edit_pet">Edit pet</string>
 
+  <string name="update_pet">Pet details succesfully updated</string>
+
+  <string name="error_updating_pet">Error updating pet</string>
+
 
 
 

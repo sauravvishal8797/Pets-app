@@ -1,21 +1,21 @@
 package android.example.com.pets;
 
-import static android.R.attr.id;
-import static android.example.com.pets.data.PetDbHelper.LOG_TAG;
 
+import static android.support.v7.widget.AppCompatDrawableManager.get;
+import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.example.com.pets.data.PetContract;
 import android.example.com.pets.data.PetDbHelper;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +23,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
+
+import android.example.com.pets.data.PetContract.PetEntry;
+
+import android.support.v7.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -138,18 +149,35 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         contentValues.put(PetContract.PetEntry.PET_BREED_COL, breed);
         contentValues.put(PetContract.PetEntry.PET_WEIGHT_COLOUMN, weight);
         contentValues.put(PetContract.PetEntry.PET_GENDER_COL, mGender);
-        Uri newUri = getContentResolver().insert(PetContract.PetEntry.CONTENT_URI, contentValues);
-        if (newUri == null) {
-            // If the new content URI is null, then there was an error with insertion.
-            Toast.makeText(this, getString(R.string.Error_inserting),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, the insertion was successful and we can display a toast.
-            Toast.makeText(this, getString(R.string.Inserted),
-                    Toast.LENGTH_SHORT).show();
+        if(this.getTitle() == "Add a pet"){
+            Uri newUri = getContentResolver().insert(PetContract.PetEntry.CONTENT_URI, contentValues);
+            if (newUri == null) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(this, getString(R.string.Error_inserting),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.Inserted),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(this.getTitle() == "Edit a pet"){
+            int updated = getContentResolver().update(uri, contentValues, null, null);
+            if(updated == 0){
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(this, getString(R.string.error_updating_pet),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.update_pet),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            }
         }
 
-    }
+
+
 
 
     @Override
