@@ -7,6 +7,7 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -17,11 +18,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -48,6 +51,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private EditText mNameEditText;
 
+    private boolean mPethasChanged = false;
+
     private Uri uri;
 
     private static final int LOADER_ID = 1;
@@ -68,6 +73,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Spinner mGenderSpinner;
 
     private int mGender = 0;
+
+    private View.OnTouchListener mTouchlistener = new View.OnTouchListener() {
+        @Override public boolean onTouch(View view, MotionEvent motionEvent) {
+            mPethasChanged = true;
+            return false;
+        }
+    };
 
 
 
@@ -94,10 +106,30 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
 
+        mNameEditText.setOnTouchListener(mTouchlistener);
+
+        mBreedEditText.setOnTouchListener(mTouchlistener);
+
+        mWeightEditText.setOnTouchListener(mTouchlistener);
+
+        mGenderSpinner.setOnTouchListener(mTouchlistener);
+
         setupspinner();
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
+
+    }
+
+    @Override public void onBackPressed() {
+
+        if(mPethasChanged == true){
+            UnsavedChanges();
+        }
+        else{
+            super.onBackPressed();
+
+        }
 
     }
 
@@ -185,6 +217,34 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         }
 
+        private void UnsavedChanges(){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(R.string.dialog_message);
+            builder.setPositiveButton(R.string.positive_dialog_button, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface dialogInterface, int i) {
+
+                    if(dialogInterface != null){
+
+                        finish();
+
+                    }
+
+                }
+            });
+
+            builder.setNegativeButton(R.string.negative_dialog_button, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface dialogInterface, int i) {
+                    if(dialogInterface != null){
+                        return;
+                    }
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
 
 
 
@@ -216,8 +276,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // Navigate back to parent activity (CatalogActivity)
+                if(mPethasChanged == true){
 
-                NavUtils.navigateUpFromSameTask(this);
+                    UnsavedChanges();
+                }
+                else{
+                    NavUtils.navigateUpFromSameTask(this);
+                }
+
+
                 return true;
 
         }

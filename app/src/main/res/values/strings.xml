@@ -63,6 +63,12 @@
 
   <string name="error_updating_pet">Error updating pet</string>
 
+  <string name="dialog_message">Do you want to discard changes</string>
+
+  <string name="positive_dialog_button">Discard</string>
+
+  <string name="negative_dialog_button">Keep Editing</string>
+
 
 
 
