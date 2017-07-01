@@ -1,6 +1,7 @@
 package android.example.com.pets;
 
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.support.v7.widget.AppCompatDrawableManager.get;
 import android.app.LoaderManager;
 import android.content.ContentUris;
@@ -140,7 +141,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String name = mNameEditText.getText().toString().trim();
         String breed = mBreedEditText.getText().toString().trim();
         String weight = mWeightEditText.getText().toString().trim();
-        int Weight = Integer.parseInt(weight);
+        int Weightint = Integer.parseInt(weight);
+        if(TextUtils.isEmpty(name) && TextUtils.isEmpty(breed) && TextUtils.isEmpty(weight) && mGender ==
+                PetEntry.UNKNOWN){
+            finish();
+
+        }
+        if(TextUtils.isEmpty(weight)){
+            Weightint = 0;
+        }
 
         PetDbHelper petDbHelper = new PetDbHelper(this);
         SQLiteDatabase db = petDbHelper.getWritableDatabase();
