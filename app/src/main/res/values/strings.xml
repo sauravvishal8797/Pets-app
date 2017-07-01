@@ -75,6 +75,10 @@
 
   <string name="delete_cancellation">Cancel</string>
 
+  <string name="error_deleting_pet">Error deleting pet</string>
+
+  <string name="pet_deleted">Pet deleted succesfully</string>
+
 
 
 

@@ -264,11 +264,38 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 @Override public void onClick(DialogInterface dialogInterface, int i) {
 
                     if(dialogInterface != null){
-                        finish();
+                        dialogInterface.dismiss();
 
                     }
                 }
             });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
+        private void deletepet(){
+
+            if(uri != null){
+
+                PetDbHelper mDbhelper = new PetDbHelper(this);
+                SQLiteDatabase db = mDbhelper.getWritableDatabase();
+
+                int row = getContentResolver().delete(uri, null, null);
+                if(row == 0){
+
+                    Toast.makeText(this, R.string.error_deleting_pet, Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(this, R.string.pet_deleted, Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+            finish();
+
+
+
         }
 
 
